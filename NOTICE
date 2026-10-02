@@ -1,0 +1,5 @@
+Java adaptation inspired by WakeUp-Jin/context-cli-template:
+https://github.com/WakeUp-Jin/context-cli-template
+
+The upstream repository contains an Apache License, Version 2.0 LICENSE file.
+This implementation is independently written in Java and retains attribution to the original design.
