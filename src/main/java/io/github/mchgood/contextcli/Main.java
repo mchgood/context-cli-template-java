@@ -40,6 +40,8 @@ public final class Main {
                 for (String file : templateFiles()) {
                     String destination = file.startsWith("src/main/java/") || file.startsWith("src/test/java/")
                             ? file.substring(0, file.indexOf("java/") + 5) + packageName.replace('.', '/') + "/" + file.substring(file.indexOf("java/") + 5) : file;
+                    if (file.equals("gitignore.txt")) destination = ".gitignore";
+                    if (file.equals("env.example.txt")) destination = ".env.example";
                     Path path = staging.resolve(destination);
                     Files.createDirectories(path.getParent());
                     try (InputStream in = Main.class.getResourceAsStream("/template/" + file)) {

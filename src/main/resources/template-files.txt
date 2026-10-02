@@ -1,7 +1,7 @@
-.env.example
-.gitignore
 README.md
 docs/ARCHITECTURE.md
+env.example.txt
+gitignore.txt
 pom.xml
 src/main/java/App.java
 src/main/java/config/Environment.java
