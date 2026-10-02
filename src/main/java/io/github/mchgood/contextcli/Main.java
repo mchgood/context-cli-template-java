@@ -6,17 +6,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public final class Main {
     private static final Pattern NAME = Pattern.compile("[a-z][a-z0-9-]*");
     private static final Pattern PACKAGE = Pattern.compile("[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+");
-    private static final List<String> FILES = List.of("pom.xml", ".gitignore", ".env.example", "README.md", "docs/ARCHITECTURE.md",
-            "src/main/java/App.java", "src/main/java/Json.java", "src/main/java/LlmClient.java",
-            "src/main/java/ContextManager.java", "src/main/java/ToolManager.java", "src/main/java/Agent.java",
-            "src/main/java/Evaluation.java");
 
     public static void main(String[] args) {
         try {
@@ -42,9 +37,9 @@ public final class Main {
             if (Files.exists(target)) throw new IllegalArgumentException("Directory already exists: " + target);
             Path staging = Files.createTempDirectory(parent, ".context-cli-");
             try {
-                for (String file : FILES) {
-                    String destination = file.startsWith("src/main/java/")
-                            ? "src/main/java/" + packageName.replace('.', '/') + "/" + file.substring("src/main/java/".length()) : file;
+                for (String file : templateFiles()) {
+                    String destination = file.startsWith("src/main/java/") || file.startsWith("src/test/java/")
+                            ? file.substring(0, file.indexOf("java/") + 5) + packageName.replace('.', '/') + "/" + file.substring(file.indexOf("java/") + 5) : file;
                     Path path = staging.resolve(destination);
                     Files.createDirectories(path.getParent());
                     try (InputStream in = Main.class.getResourceAsStream("/template/" + file)) {
@@ -71,6 +66,12 @@ public final class Main {
     private static String value(String[] args, int index) {
         if (index >= args.length) throw new IllegalArgumentException("Missing option value");
         return args[index];
+    }
+    private static java.util.List<String> templateFiles() throws IOException {
+        try (InputStream in = Main.class.getResourceAsStream("/template-files.txt")) {
+            if (in == null) throw new IOException("Missing template manifest");
+            return new String(in.readAllBytes(), StandardCharsets.UTF_8).lines().filter(s -> !s.isBlank()).toList();
+        }
     }
     private static void usage() { System.out.println("Usage: java -jar context-cli-template-java.jar --name my-agent --package com.example.agent [--output DIR]"); }
 }

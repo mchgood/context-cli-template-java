@@ -1,0 +1,22 @@
+name: Verify generated Java project
+on:
+  push:
+  pull_request:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Build generator
+        run: mvn -B package
+      - name: Generate and build project
+        run: |
+          java -jar target/context-cli-template-java-1.0.0.jar --name ci-agent --package org.example.agent
+          cd ci-agent
+          mvn -B test-compile
+          java -cp target/classes:target/test-classes org.example.agent.TemplateSelfTest

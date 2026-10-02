@@ -1,4 +1,4 @@
-package {{PACKAGE_NAME}};
+package {{PACKAGE_NAME}}.core.llm;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

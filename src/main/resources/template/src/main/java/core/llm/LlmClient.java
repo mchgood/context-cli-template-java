@@ -1,4 +1,4 @@
-package {{PACKAGE_NAME}};
+package {{PACKAGE_NAME}}.core.llm;
 
 import java.io.IOException;
 import java.net.URI;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /** OpenAI-compatible Chat Completions client using Java 17 HttpClient. */
-public final class LlmClient {
+public final class LlmClient implements ChatModel {
     private final HttpClient http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
     private final String apiKey, model, baseUrl;
     public LlmClient(String apiKey, String model, String baseUrl) {
